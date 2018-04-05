@@ -212,34 +212,136 @@ function trim(item) {
 	return tmp.slice(tmp.lastIndexOf("/")+1,tmp.lastIndexOf("."));
 };
 
-// get video file
+
+/* lets the participant select a picture and records which one was chosen */
+function makeChoice(event) {
+                var img = trim(event.target.src);                       // get the image the participant selected
+                var endTime, i, tmpImg, trial_type, gaze_target;        // variable creation
+                $(".xsit_pic").unbind("click");                         // unbind the click event handler
+                endTime = (new Date()).getTime();                       // get the end time for computing RT
+                event.target.style.border = '5px solid green';          // visually indicates the participant's choice
+                $("#reward_player")[0].play();                          // play chime
+
+                //check where we are in the experiment
+                if(Math.floor(experiment.exampleItem) <= numExamples) {
+                  trial_type = "example";
+                } else if(Math.floor(experiment.exampleItem) > numExamples &
+                    experiment.keepPic[experiment.item].length == 0) {
+                  trial_type = "exposure";
+                } else {
+                  trial_type = "test";
+                }
+
+                // find the screen position of the clicked object
+                for(i = 0; i < imgsPerSlide; i++) {
+                  tmpImg = trim($(".xsit_pic")[i].children[0].src);
+                  if(tmpImg == img){break;}
+                }
+
+                // store that image as new_image
+                var new_i = i, new_img = img, correct;
+
+                // get the kept images (previous and current)
+                if(trial_type == "example") {
+                        kept_prev = "NA";
+                        kept_curr = "NA";
+                        kept_idx = "NA";
+                } else if (trial_type == "exposure") {
+                        kept_prev = "NA";
+                        experiment.keepPic[experiment.item] = new_img;
+                        experiment.keepIdx[experiment.item] = new_i;
+                } else {
+                        kept_prev = experiment.keepPic[experiment.item];
+                        kept_curr = "NA";
+                }
+
+
+                if(trial_type == "exposure") {
+                    kept_curr = experiment.keepPic[experiment.item];
+                }
+
+                 // get gaze target
+                if(face_vid == "down-left") {
+                  gaze_target = trim($(".xsit_pic")[0].children[0].src);
+                } else if (face_vid == "down-right") {
+                  gaze_target = trim($(".xsit_pic")[1].children[0].src);
+                } else {
+                  gaze_target = "NA";
+                }
+
+                 // is response correct
+                if(trial_type == "example" || trial_type == "exposure") {
+                    correct = gaze_target == img;
+                } else {
+                  correct = kept_prev == img;
+                }
+
+
+                // keep picture from selection
+                if(Math.floor(experiment.exampleItem) > numExamples &
+                      experiment.trialTypes[experiment.item] != 1){
+                    var all_pos = range(0,imgsPerSlide-1);
+                    all_pos.splice(i,1);
+                    all_pos = shuffle(all_pos);
+                    new_i = all_pos[0];
+                    new_img = trim($(".xsit_pic")[new_i].children[0].src);
+                    experiment.keepPic[experiment.item] = new_img;
+                    experiment.keepIdx[experiment.item] = new_i;
+                  }
+
+
+                //store everything we want about the trial
+                data = {
+                    itemNum: experiment.item,
+                    trial_category: trial_type,
+                    trialType: experiment.trialTypes[experiment.item],
+                    samePos: experiment.samePos[experiment.item],
+                    gaze_target: gaze_target,
+                    chosen: img,
+                    correct: correct,
+                    chosen_idx: i,
+                    kept_prev: kept_prev,
+                    kept_curr: kept_curr,
+                    kept_idx: experiment.keepIdx[experiment.item],
+                    rt: endTime - startTime,
+                    face_vid: face_vid,
+                    face_idx: faceLook,
+                };
+                console.log(data);
+                experiment.data.push(data);
+
+                setTimeout(experiment.blank, 500);
+};
+
+// get the correct video files for a trial
+// todo: make this general to handle the different kids of videos to load
 function load_video(vid_element, vid_name) {
-	// todo: make this general to handle the different kids of videos to load
-	if (videoElement.canPlayType("video/mp4")) {
-				 $("#video1")[0].src = "stimuli/videos/"+vid_name+".mov";
-			}
-			else if (videoElement.canPlayType("video/ogg")) {
-					 $("#video1")[0].src = "stimuli/videos/"+vid_name+".ogv";
-			}
-			else {
+	vid_id = vid_element.id;
+	//console.log(vid_id, vid_element)
+	if (vid_element.canPlayType("video/mp4")) {
+				 vid_element.src = "stimuli/videos/"+vid_name+".mov";
+			} else if (vid_element.canPlayType("video/ogg")) {
+					 vid_element.src = "stimuli/videos/"+vid_name+".ogv";
+			}else {
 					window.alert("Can't play anything");
 			}
-
-			$("#video1")[0].load();
+			vid_element.load();
 };
 
 // Play video after video has loaded completely
 function play_video(vid_element) {
+				console.log('blah')
 	      vid_element.oncanplaythrough = function() {
 	            // Play eye gaze video
 	              setTimeout(function(){
-	                $("#video1")[0].play();
+	                vid_element.play();
 	              }, 1300)
-
-	            //Start recording responses when video finishes (at end of longest eye gaze)
-	              setTimeout(function(){
-	                startTime = (new Date()).getTime();
-	                $(".xsit_pic").bind("click", makeChoice);
-	              }, 5) // should be 4000
 	        };
+
+					//Start recording responses when video finishes (at end of longest eye gaze)
+						setTimeout(function(){
+							startTime = (new Date()).getTime();
+							$(".xsit_pic").bind("click", makeChoice);
+						}, 5) // should be 4000
+
 };

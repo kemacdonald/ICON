@@ -77,55 +77,70 @@
   <div class="slide" id="narrator_intro">
 
     <div id="video_player" align="center">
-      <video id="video1" width="500" height="500">
+      <video id="intro_video" width="500" height="500">
         <source src="stimuli/videos/icon_narrator_intro.mov" type="video/mp4">
         <source src="stimuli/videos/icon_narrator_intro.ogg" type="video/ogg">
         Your browser does not support the video tag.
       </video>
     </div>
 
+  <div align="center">
+      <button type="button" onClick="this.blur(); experiment.next()">
+        <font size="24">Continue Game</font>
+      </button>
   </div>
 
-<!--EXPOSURE SLIDE-->
+  </div>
+
+<!--EXPERIMENT SLIDE-->
     <div class="slide" id="stage">
-      <!-- VIDEO -->
+
+      <!-- CENTER VIDEO -->
           <div id="video_player" align="center">
-            <video id="video1" width="350" height="300">
-              <source src="stimuli/videos/icon_narrator_intro.mov" type="video/mp4">
-              <source src="stimuli/videos/icon_narrator_intro.ogg" type="video/ogg">
+            <video id="center_video" width="400" height="350">
+              <source src="stimuli/videos/icon_narrator_introinstrument_left.mov" type="video/mp4">
+              <source src="stimuli/videos/icon_narrator_introinstrument_left.ogv" type="video/ogg">
               Your browser does not support the video tag.
             </video>
           </div>
 
-      <!-- IMAGES -->
+      <!-- LEFT AND RIGHT VIDEOS -->
 
-      <table align="center" cellpadding="30">
+      <table align="center" cellpadding="10">
             <tr></tr>
 
             <tr>
                 <td align="center">
-                  <div class="xsit_pic" id="pic1">
-                    <img src="stimuli/images/Novel6.jpg" width="300" border="0px solid white">
+                  <div id="video_player" align="center">
+                    <video id="left_video" width="400" height="350">
+                      <source src="stimuli/videos/icon_stimuli_xylophone.mov" type="video/mp4">
+                      <source src="stimuli/videos/icon_stimuli_xylophone.ogv" type="video/ogg">
+                      Your browser does not support the video tag.
+                    </video>
                   </div>
                 </td>
 
                 <td></td>
-                <td></td>
+                <td>
+                  <div align="center">
+                      <button type="button" onClick="this.blur(); experiment.next()">
+                        <font size="24">Continue Game</font>
+                      </button>
+                  </div>
+                </td>
                 <td></td>
 
                 <td align="center">
-                  <div class="xsit_pic" id="pic2">
-                    <img src="stimuli/images/Novel13.jpg" width="300" border="0px solid white">
+                  <div id="video_player" align="center">
+                    <video id="right_video" width="400" height="350">
+                      <source src="stimuli/videos/icon_stimuli_clarinet.mov" type="video/mp4">
+                      <source src="stimuli/videos/icon_stimuli_clarinet.ogv" type="video/ogg">
+                      Your browser does not support the video tag.
+                    </video>
                   </div>
                 </td>
             </tr>
       </table>
-
-      <!-- SOUND PLAYER -->
-      <audio id="sound_player">
-        <source src="stimuli/sounds/audio_sprite.mp3" type="audio/mp3">
-      </audio>
-
 
 
       <!-- CHIME PLAYER -->
