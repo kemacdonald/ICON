@@ -17,28 +17,7 @@ var experiment = {
   experiment: 'icon_ipad',
   subId: '',
   browser: browser,
-  social_cond: '',
-  trialOrder: trialOrder,
-  trialTypes: trialOrder,
-  trials: allSpacings,
-  samePosOrderOne: samePosOrderOne,
-  samePosOrderTwo: samePosOrderTwo,
-  samePos: [allSamePosOne[samePosOrderOne][0], allSamePosOne[samePosOrderOne][1],
-            allSamePosOne[samePosOrderTwo][0], allSamePosOne[samePosOrderTwo][1],
-            allSamePosOne[samePosOrderOne][0], allSamePosOne[samePosOrderOne][1]],
   data: [],
-  keepPic: ['','','','','',''],
-  keepIdx: [0, 0, 0, 0, 0, 0],
-  item: 0,
-  exampleItem: 0,
-  trialSounds: trialSounds,
-  exampleSounds: ['flower','truck'],
-  trialImages: allImgs,
-  exampleImages: exampleImages,
-  exampleFace: 0,
-  exampleFaces: exampleFaces,
-  faceCenter: 'straight-ahead',
-  faceVids: testFaces,
 
 /*The function that gets called when the sequence is finished. */
   end: function() {
@@ -128,49 +107,59 @@ var experiment = {
     });
   },
 
-narrator_intro: function() {
-  showSlide("narrator_intro");
-  videoElements = document.getElementsByTagName("video");
-  var vid_name = "icon_narrator_intro";
-  load_video(videoElements[0], vid_name);
-  play_video(videoElements[0]);
-},
-
 /*The work horse of the sequence: what to do on every trial.*/
   next: function() {
+    //var vid_name = "icon_narrator_intro";
   // figure out where we are in the experiment: exposure or test
   var trial_type = "exposure"
+  var within_counter = 0;
   // get video elements
   var videoElements = document.getElementsByTagName("video");
 
+  load_video(videoElements[0], "icon_narrator_intro") // center_video
+  videoElements[0].play()
+
+
   if(trial_type == "exposure") {
     // load videos
-    load_video(videoElements[1], "icon_narrator_introinstrument_right") // center_video
-    load_video(videoElements[2], "icon_stimuli_xylophone") // left_video
-    load_video(videoElements[3], "icon_stimuli_clarinet") // right_video
+    load_video(videoElements[1], "icon_stimuli_xylophone") // left_video
+    load_video(videoElements[2], "icon_stimuli_clarinet") // right_video
 
     // play videos (todo: make this general to handle different sequences of videos)
-    play_video(videoElements[1])
-
     // play right video after center ends
+    videoElements[0].onended = function(e) {
+      console.log(within_counter)
+      if(within_counter==0) {
+        load_video(videoElements[0], "icon_narrator_introinstrument_right") // center_video
+        videoElements[0].play()
+        within_counter++
+      } else if(within_counter==1) {
+        videoElements[2].play() // play_video() function not working at this step -- todo
+        within_counter++
+      } else if(within_counter==2) {
+        videoElements[1].play()
+        within_counter++
+      } else {
+        videoElements[0].pause()
+      }
+    }
+    // say what to do after the right video ends
+    videoElements[2].onended = function(e) {
+      load_video(videoElements[0], "icon_narrator_introinstrument_left")
+      videoElements[0].play()
+    }
+
+    // what to do after the left video ends
     videoElements[1].onended = function(e) {
-      videoElements[3].play()
+      load_video(videoElements[0], "icon_narrator_testxylophone")
+      videoElements[0].play()
     }
-
-    // play right video after center ends
-    videoElements[3].onended = function(e) {
-      videoElements[2].play()
-    }
-
-
-
-
   }
 
     //blank out all borders so no item is pre-selected
-    $(".xsit_pic").each(function(){this.children[0].style.border = '5px solid white';});
+    //$(".xsit_pic").each(function(){this.children[0].style.border = '5px solid white';});
 
-    //Re-Display the experiment slide
+    //Display the experiment slide
       showSlide("stage");
 
     }

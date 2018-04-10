@@ -1,12 +1,11 @@
 <html>
     <head>
-        <title>Instrument Game!</title>
+        <title>Music Game!</title>
          <!--CSS-->
-        <link href="stylesheet" href="style/style.css" type="text/css"/>
+         <link href="style/style.css" rel="stylesheet" type="text/css"/>
         <link href="style/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
         <link href ="style/jquery-ui/jquery-ui.css" rel="stylesheet"/ type="text/css">
         <meta name="apple-mobile-web-app-capable" content="yes" />
-
         <!--JS-->
         <script src="js/jquery-1.11.1.min.js"></script>
         <script src="js/mmturkey.js"></script>
@@ -25,7 +24,7 @@
                   <input type="number" pattern="\d*"/ id="subjectID" name="subjectID" size="30">
                 	</p>
                   <!-- <button type="button" onClick="this.blur(); experiment.conditionClick()">   -->
-                    <button type="button" onClick="this.blur(); experiment.narrator_intro()">
+                    <button type="button" onClick="this.blur(); experiment.next()">
                       <font size="24">Start</font>
                   </button>
             </center>
@@ -73,74 +72,71 @@
             </center>
     </div>
 
-<!--NARRATOR INTRO SLIDE-->
-  <div class="slide" id="narrator_intro">
-
-    <div id="video_player" align="center">
-      <video id="intro_video" width="500" height="500">
-        <source src="stimuli/videos/icon_narrator_intro.mov" type="video/mp4">
-        <source src="stimuli/videos/icon_narrator_intro.ogg" type="video/ogg">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-
-  <div align="center">
-      <button type="button" onClick="this.blur(); experiment.next()">
-        <font size="24">Continue Game</font>
-      </button>
-  </div>
-
-  </div>
 
 <!--EXPERIMENT SLIDE-->
     <div class="slide" id="stage">
 
-      <!-- CENTER VIDEO -->
-          <div id="video_player" align="center">
-            <video id="center_video" width="400" height="350">
+      <div id="videoal">
+
+        <div class="video">
+            <video>
               <source src="stimuli/videos/icon_narrator_introinstrument_left.mov" type="video/mp4">
               <source src="stimuli/videos/icon_narrator_introinstrument_left.ogv" type="video/ogg">
-              Your browser does not support the video tag.
             </video>
+        </div>
+      </div>
+      
+      <div id="videoal">
+
+          <div class="video">
+             <video>
+               <source src="stimuli/videos/icon_stimuli_xylophone.mov" type="video/mp4">
+               <source src="stimuli/videos/icon_stimuli_xylophone.ogv" type="video/ogg">
+             </video>
           </div>
 
-      <!-- LEFT AND RIGHT VIDEOS -->
+          <div class="video">
+             <video >
+               <source src="stimuli/videos/icon_stimuli_clarinet.mov" type="video/mp4">
+               <source src="stimuli/videos/icon_stimuli_clarinet.ogv" type="video/ogg">
+             </video>
+          </div>
+      </div>
 
-      <table align="center" cellpadding="10">
-            <tr></tr>
+      <!-- <div id="videoal">
 
-            <tr>
-                <td align="center">
-                  <div id="video_player" align="center">
-                    <video id="left_video" width="400" height="350">
-                      <source src="stimuli/videos/icon_stimuli_xylophone.mov" type="video/mp4">
-                      <source src="stimuli/videos/icon_stimuli_xylophone.ogv" type="video/ogg">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </td>
+        <table align='center'>
+          <tr>
+            <td>
+              <video id="center_video" width="400" height="350">
+                <source src="stimuli/videos/icon_narrator_introinstrument_left.mov" type="video/mp4">
+                <source src="stimuli/videos/icon_narrator_introinstrument_left.ogv" type="video/ogg">
+                Your browser does not support the video tag.
+              </video>
 
-                <td></td>
-                <td>
-                  <div align="center">
-                      <button type="button" onClick="this.blur(); experiment.next()">
-                        <font size="24">Continue Game</font>
-                      </button>
-                  </div>
-                </td>
-                <td></td>
+            </td>
+          </tr>
 
-                <td align="center">
-                  <div id="video_player" align="center">
-                    <video id="right_video" width="400" height="350">
-                      <source src="stimuli/videos/icon_stimuli_clarinet.mov" type="video/mp4">
-                      <source src="stimuli/videos/icon_stimuli_clarinet.ogv" type="video/ogg">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </td>
+          <tr>
+              <td>
+                  <video id="left_video" width="400" height="350">
+                    <source src="stimuli/videos/icon_stimuli_xylophone.mov" type="video/mp4">
+                    <source src="stimuli/videos/icon_stimuli_xylophone.ogv" type="video/ogg">
+                    Your browser does not support the video tag.
+                  </video>
+              </td>
+
+              <td>
+                  <video id="right_video" width="400" height="350">
+                    <source src="stimuli/videos/icon_stimuli_clarinet.mov" type="video/mp4">
+                    <source src="stimuli/videos/icon_stimuli_clarinet.ogv" type="video/ogg">
+                    Your browser does not support the video tag.
+                  </video>
+              </td>
             </tr>
-      </table>
+        </table>
+
+      </div> -->
 
 
       <!-- CHIME PLAYER -->
@@ -171,14 +167,13 @@
           <br>
 
                <button type="button" onClick="this.blur(); experiment.end()">
-                <font size="24">Start Game</font>
+                <font size="24">End Game</font>
               </button>
       </center>
     </div>
 
     <script src="js/icon_ipad_utils.js"></script>
     <script src="js/icon_ipad_param_setter.js"></script>
-    <script src="js/spriteData.js"></script>
     <script src="js/icon_ipad_control_flow.js"></script>
 
     </body>

@@ -330,9 +330,8 @@ function load_video(vid_element, vid_name) {
 
 // Play video after video has loaded completely
 function play_video(vid_element) {
-				console.log('blah')
 	      vid_element.oncanplaythrough = function() {
-	            // Play eye gaze video
+	            // Play video
 	              setTimeout(function(){
 	                vid_element.play();
 	              }, 1300)
