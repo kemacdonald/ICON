@@ -38,8 +38,3 @@ vignettes/*.pdf
 *.fff
 
 .DS_Store
-
-# stimuli files
-stimuli/
-*.mov
-*.ogv
