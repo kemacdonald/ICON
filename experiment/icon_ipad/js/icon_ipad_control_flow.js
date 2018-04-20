@@ -119,7 +119,6 @@ var experiment = {
   load_video(videoElements[0], "icon_narrator_intro") // center_video
   videoElements[0].play()
 
-
   if(trial_type == "exposure") {
     // load videos
     load_video(videoElements[1], "icon_stimuli_xylophone") // left_video
