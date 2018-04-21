@@ -344,3 +344,30 @@ function play_video(vid_element) {
 						}, 5) // should be 4000
 
 };
+
+function make_video_name(filler, stimulus) {
+  return filler.concat(stimulus);
+};
+
+function shuffle(array) {
+   for (var i = array.length - 1; i > 0; i--) {
+       var j = Math.floor(Math.random() * (i + 1));
+       var temp = array[i];
+       array[i] = array[j];
+       array[j] = temp;
+   }
+   return array;
+};
+
+// make a trial
+// takes a pair of instruments
+// returns a json object with all the video names needed for each trial
+function make_trial(instruments, center_videos) {
+  instruments_trial = shuffle(instruments)
+  trial_dict = {
+    center_videos: center_videos,
+    left_video: make_video_name(instrument_filler, instruments_trial[0]),
+    right_video: make_video_name(instrument_filler, instruments_trial[1]),
+  };
+  return trial_dict
+}

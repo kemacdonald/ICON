@@ -10,8 +10,9 @@ the experiment.
 
 //Show instruction slide to start experiment
 showSlide("instructions");
-// Get browser
-var browser=BrowserDetect.browser;
+
+// Get browser information
+var browser = BrowserDetect.browser;
 
 var experiment = {
   experiment: 'icon_ipad',
@@ -22,7 +23,6 @@ var experiment = {
 /*The function that gets called when the sequence is finished. */
   end: function() {
     // grab variables and store in experiment object
-    experiment.social_cond=testCondition;
     experiment.subId=subjectID;
     experiment.comments = $('#comments')[0].value;
     //Show the finish slide
@@ -34,12 +34,6 @@ var experiment = {
 /*shows a blank screen for 1500 ms*/
   blank: function() {
     showSlide("blankSlide");
-    if(experiment.exampleItem == numExamples){
-      experiment.exampleItem = numExamples+1;
-      setTimeout(showSlide("instructions3"),500);
-    } else {
-      setTimeout(experiment.next, 1500);
-    }
   },
 
   conditionClick: function() {
@@ -109,51 +103,61 @@ var experiment = {
 
 /*The work horse of the sequence: what to do on every trial.*/
   next: function() {
-    //var vid_name = "icon_narrator_intro";
-  // figure out where we are in the experiment: exposure or test
-  var trial_type = "exposure"
-  var within_counter = 0;
-  // get video elements
-  var videoElements = document.getElementsByTagName("video");
+    // TODO: check if trial array is empty to see if we are done
 
-  load_video(videoElements[0], "icon_narrator_intro") // center_video
-  videoElements[0].play()
+    // get current trial from trials array
+    curr_trial = trials.shift()
 
-  if(trial_type == "exposure") {
-    // load videos
-    load_video(videoElements[1], "icon_stimuli_xylophone") // left_video
-    load_video(videoElements[2], "icon_stimuli_clarinet") // right_video
+    // get video elements
+    var videoElements = document.getElementsByTagName("video");
+    var center_vid_element = videoElements[0]
+    var left_vid_element = videoElements[1]
+    var right_vid_element = videoElements[2]
 
-    // play videos (todo: make this general to handle different sequences of videos)
+    // load and play first center video
+    var curr_center_video = curr_trial["center_videos"].shift()
+    load_video(center_vid_element, curr_center_video)
+
+    // load right/left videos
+    load_video(left_vid_element, curr_trial["left_video"]) // left_video
+    load_video(right_vid_element, curr_trial["right_video"]) // right_video
+
+    // play videos (TODO: make this general to handle different sequences of videos)
+    play_video(center_vid_element)
+
     // play right video after center ends
-    videoElements[0].onended = function(e) {
-      console.log(within_counter)
-      if(within_counter==0) {
-        load_video(videoElements[0], "icon_narrator_introinstrument_right") // center_video
-        videoElements[0].play()
-        within_counter++
-      } else if(within_counter==1) {
-        videoElements[2].play() // play_video() function not working at this step -- todo
-        within_counter++
-      } else if(within_counter==2) {
-        videoElements[1].play()
-        within_counter++
-      } else {
-        videoElements[0].pause()
+    center_vid_element.onended = function(e) {
+      var next_center_vid = curr_trial["center_videos"].shift()
+      load_video(center_vid_element, next_center_vid)
+
+      if (next_center_vid == "icon_narrator_left") {
+        center_vid_element.play()
+        left_vid_element.play()
+        // say what to do after the left video ends
+        left_vid_element.onended = function(e) {
+          center_vid_element.play()
+        }
+
       }
-    }
-    // say what to do after the right video ends
-    videoElements[2].onended = function(e) {
-      load_video(videoElements[0], "icon_narrator_introinstrument_left")
-      videoElements[0].play()
+
+
+      if (next_center_vid == "icon_narrator_right") {
+        right_vid_element.play()
+        // say what to do after the right video ends
+        right_vid_element.onended = function(e) {
+          load_video(center_vid_element, curr_trial["center_videos"].shift())
+          center_vid_element.play()
+        }
+      }
+
     }
 
-    // what to do after the left video ends
+
+    // what to do after both the left/right videos play
     videoElements[1].onended = function(e) {
       load_video(videoElements[0], "icon_narrator_testxylophone")
       videoElements[0].play()
     }
-  }
 
     //blank out all borders so no item is pre-selected
     //$(".xsit_pic").each(function(){this.children[0].style.border = '5px solid white';});
